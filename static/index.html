@@ -10,28 +10,37 @@
         header { background: #1a1a2e; padding: 1rem 2rem; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 1rem; }
         header h1 { font-size: 1.5rem; color: #7c6af7; }
         header span { font-size: 0.85rem; color: #888; }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .container { max-width: 1300px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .panel { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; border: 1px solid #2a2a3e; }
         .panel h2 { font-size: 1rem; color: #7c6af7; margin-bottom: 1rem; }
-        .controls { display: flex; gap: 1rem; margin-bottom: 1rem; }
-        select { background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; flex: 1; }
-        textarea { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; border-radius: 8px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.85rem; resize: vertical; min-height: 300px; }
-        button { width: 100%; background: #7c6af7; color: white; border: none; padding: 0.85rem; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
+        .controls { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        select, input[type="text"] { background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; }
+        select { flex: 1; }
+        .context-bar { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #444; border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .context-bar::placeholder { color: #555; }
+        textarea { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; border-radius: 8px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.85rem; resize: vertical; min-height: 280px; }
+        button { width: 100%; background: #7c6af7; color: white; border: none; padding: 0.85rem; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 0.75rem; transition: background 0.2s; }
         button:hover { background: #6a58e0; }
         button:disabled { background: #444; cursor: not-allowed; }
-        .score-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .score-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 3px solid #7c6af7; color: #7c6af7; }
+        .score-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: #0f0f1a; border-radius: 8px; }
+        .score-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: bold; border: 3px solid #7c6af7; color: #7c6af7; flex-shrink: 0; }
+        .score-circle.low { border-color: #e74c3c; color: #e74c3c; }
+        .score-circle.mid { border-color: #f39c12; color: #f39c12; }
+        .score-circle.high { border-color: #2ecc71; color: #2ecc71; }
         .section { margin-bottom: 1.2rem; }
-        .section h3 { font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .tag { display: inline-block; background: #2a2a3e; padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; margin: 0.2rem; }
+        .section h3 { font-size: 0.8rem; color: #888; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tag { display: inline-block; background: #2a2a3e; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; margin: 0.2rem; line-height: 1.4; }
         .tag.bug { border-left: 3px solid #e74c3c; }
         .tag.security { border-left: 3px solid #f39c12; }
         .tag.performance { border-left: 3px solid #3498db; }
         .tag.suggestion { border-left: 3px solid #2ecc71; }
         .improved-code { background: #0f0f1a; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-x: auto; border: 1px solid #333; max-height: 300px; overflow-y: auto; }
         .loading { text-align: center; padding: 2rem; color: #7c6af7; }
-        .empty { text-align: center; padding: 3rem; color: #555; }
+        .empty { text-align: center; padding: 3rem; color: #555; font-size: 0.9rem; }
         .summary-text { font-size: 0.9rem; line-height: 1.6; color: #ccc; background: #0f0f1a; padding: 1rem; border-radius: 8px; }
+        .copy-btn { background: #2a2a3e; color: #aaa; border: 1px solid #444; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; float: right; margin-bottom: 0.5rem; }
+        .copy-btn:hover { background: #333; color: #fff; }
+        .no-issues { color: #2ecc71; font-size: 0.85rem; padding: 0.5rem 0; }
     </style>
 </head>
 <body>
@@ -59,6 +68,12 @@
                     <option value="bugs">Bug Detection</option>
                 </select>
             </div>
+            <input 
+                type="text" 
+                id="context" 
+                class="context-bar"
+                placeholder="Describe your code: e.g. 'Login API for banking app' or 'Data processing script for 1M records'"
+            />
             <textarea id="code" placeholder="Paste your code here..."></textarea>
             <button id="reviewBtn" onclick="reviewCode()">⚡ Review My Code</button>
         </div>
@@ -66,7 +81,7 @@
         <div class="panel">
             <h2>🔍 Review Results</h2>
             <div id="results">
-                <div class="empty">Paste your code and click Review to get started</div>
+                <div class="empty">Describe your code, paste it and click Review to get a focused AI review</div>
             </div>
         </div>
     </div>
@@ -76,6 +91,7 @@
             const code = document.getElementById('code').value.trim();
             const language = document.getElementById('language').value;
             const focus = document.getElementById('focus').value;
+            const context = document.getElementById('context').value.trim() || "No context provided";
             const btn = document.getElementById('reviewBtn');
             const results = document.getElementById('results');
 
@@ -89,17 +105,18 @@
                 const response = await fetch('/review', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, language, focus })
+                    body: JSON.stringify({ code, language, focus, context })
                 });
 
                 const data = await response.json();
+                const scoreClass = data.score <= 4 ? 'low' : data.score <= 6 ? 'mid' : 'high';
 
                 results.innerHTML = `
                     <div class="score-bar">
-                        <div class="score-circle">${data.score}/10</div>
+                        <div class="score-circle ${scoreClass}">${data.score}/10</div>
                         <div>
-                            <div style="font-weight:500">Code Quality Score</div>
-                            <div style="font-size:0.8rem;color:#888">${getScoreLabel(data.score)}</div>
+                            <div style="font-weight:500;font-size:15px">${getScoreLabel(data.score)}</div>
+                            <div style="font-size:0.8rem;color:#888;margin-top:3px">Focus: ${getFocusLabel(focus)}</div>
                         </div>
                     </div>
 
@@ -108,29 +125,30 @@
                         <div class="summary-text">${data.summary}</div>
                     </div>
 
-                    ${data.bugs.length ? `<div class="section">
+                    ${data.bugs && data.bugs.length ? `<div class="section">
                         <h3>🐛 Bugs Found (${data.bugs.length})</h3>
                         ${data.bugs.map(b => `<span class="tag bug">${b}</span>`).join('')}
-                    </div>` : ''}
+                    </div>` : focus === 'bugs' || focus === 'general' ? `<div class="section"><h3>🐛 Bugs</h3><p class="no-issues">✅ No bugs found</p></div>` : ''}
 
-                    ${data.security_issues.length ? `<div class="section">
+                    ${data.security_issues && data.security_issues.length ? `<div class="section">
                         <h3>🔒 Security Issues (${data.security_issues.length})</h3>
                         ${data.security_issues.map(s => `<span class="tag security">${s}</span>`).join('')}
-                    </div>` : ''}
+                    </div>` : focus === 'security' || focus === 'general' ? `<div class="section"><h3>🔒 Security</h3><p class="no-issues">✅ No security issues found</p></div>` : ''}
 
-                    ${data.performance_issues.length ? `<div class="section">
+                    ${data.performance_issues && data.performance_issues.length ? `<div class="section">
                         <h3>⚡ Performance Issues (${data.performance_issues.length})</h3>
                         ${data.performance_issues.map(p => `<span class="tag performance">${p}</span>`).join('')}
-                    </div>` : ''}
+                    </div>` : focus === 'performance' || focus === 'general' ? `<div class="section"><h3>⚡ Performance</h3><p class="no-issues">✅ No performance issues found</p></div>` : ''}
 
-                    ${data.suggestions.length ? `<div class="section">
+                    ${data.suggestions && data.suggestions.length ? `<div class="section">
                         <h3>💡 Suggestions (${data.suggestions.length})</h3>
                         ${data.suggestions.map(s => `<span class="tag suggestion">${s}</span>`).join('')}
                     </div>` : ''}
 
                     <div class="section">
-                        <h3>✨ Improved Code</h3>
-                        <div class="improved-code">${escapeHtml(data.improved_code)}</div>
+                        <h3>✨ Optimized Code</h3>
+                        <button class="copy-btn" onclick="copyCode()">Copy</button>
+                        <div class="improved-code" id="improvedCode">${escapeHtml(data.improved_code)}</div>
                     </div>
                 `;
             } catch (err) {
@@ -141,14 +159,27 @@
             }
         }
 
+        function copyCode() {
+            const code = document.getElementById('improvedCode').innerText;
+            navigator.clipboard.writeText(code);
+            document.querySelector('.copy-btn').textContent = 'Copied!';
+            setTimeout(() => document.querySelector('.copy-btn').textContent = 'Copy', 2000);
+        }
+
         function getScoreLabel(score) {
-            if (score >= 9) return 'Excellent code!';
-            if (score >= 7) return 'Good code, minor improvements needed';
-            if (score >= 5) return 'Average, several improvements needed';
-            return 'Needs significant improvement';
+            if (score >= 9) return '🟢 Excellent — production ready!';
+            if (score >= 7) return '🟡 Good — minor improvements needed';
+            if (score >= 5) return '🟠 Average — several issues found';
+            return '🔴 Poor — critical issues found';
+        }
+
+        function getFocusLabel(focus) {
+            const labels = { general: 'General Review', security: 'Security', performance: 'Performance', bugs: 'Bug Detection' };
+            return labels[focus] || focus;
         }
 
         function escapeHtml(text) {
+            if (!text) return '';
             return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
     </script>

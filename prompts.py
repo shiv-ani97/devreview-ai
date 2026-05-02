@@ -1,12 +1,25 @@
 from langchain_core.prompts import PromptTemplate
 
 REVIEW_PROMPT = PromptTemplate(
-    input_variables=["language", "focus", "code"],
-    template="""Review this {language} code. Focus on: {focus}.
+    input_variables=["language", "focus", "code", "context"],
+    template="""You are a senior {language} engineer. A developer needs help with their code.
 
-Code:
+Developer's context: {context}
+Review focus: {focus}
+Language: {language}
+
+Code to review:
 {code}
 
-Reply with ONLY this JSON and nothing else:
-{{"summary":"summary here","bugs":["bug1","bug2"],"security_issues":["issue1"],"performance_issues":["issue1"],"suggestions":["fix1","fix2"],"improved_code":"fixed code here","score":5}}"""
+Instructions:
+- ONLY report issues related to the focus area "{focus}"
+- If focus is "security": only report security_issues, leave bugs and performance_issues as empty lists
+- If focus is "performance": only report performance_issues, leave bugs and security_issues as empty lists  
+- If focus is "bugs": only report bugs, leave security_issues and performance_issues as empty lists
+- If focus is "general": report everything
+- improved_code must fix ONLY the issues related to "{focus}"
+- Base your suggestions on the developer's context
+
+Reply with ONLY this JSON:
+{{"summary":"2 sentence summary","bugs":[],"security_issues":[],"performance_issues":[],"suggestions":["specific fix 1","specific fix 2"],"improved_code":"optimized code here","score":5}}"""
 )

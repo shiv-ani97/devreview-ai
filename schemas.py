@@ -3,7 +3,8 @@ from pydantic import BaseModel
 class CodeReviewRequest(BaseModel):
     code: str
     language: str = "python"
-    focus: str = "general"  # general, security, performance, bugs
+    focus: str = "general"
+    context: str = "No context provided"
 
 class CodeReviewResponse(BaseModel):
     summary: str
@@ -12,4 +13,4 @@ class CodeReviewResponse(BaseModel):
     performance_issues: list[str]
     suggestions: list[str]
     improved_code: str
-    score: int  # 1-10
+    score: int

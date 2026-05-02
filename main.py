@@ -7,7 +7,7 @@ from reviewer import review_code
 
 app = FastAPI(
     title="DevReview AI",
-    description="AI-Powered Code Review Tool for Developers",
+    description="AI-Powered Code Review Tool",
     version="1.0.0"
 )
 
@@ -23,11 +23,11 @@ async def review(request: CodeReviewRequest):
         raise HTTPException(status_code=400, detail="Code cannot be empty")
     if len(request.code) > 10000:
         raise HTTPException(status_code=400, detail="Code too long. Max 10000 characters")
-    
     result = await review_code(
         code=request.code,
         language=request.language,
-        focus=request.focus
+        focus=request.focus,
+        context=request.context
     )
     return result
 

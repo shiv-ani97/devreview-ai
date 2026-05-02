@@ -17,63 +17,44 @@ llm = ChatGroq(
 chain = REVIEW_PROMPT | llm | StrOutputParser()
 
 def extract_json(text: str) -> dict:
-    # Method 1: ```json blocks
     if "```json" in text:
         try:
             return json.loads(text.split("```json")[1].split("```")[0].strip())
         except:
             pass
-    
-    # Method 2: ``` blocks
     if "```" in text:
         try:
             return json.loads(text.split("```")[1].split("```")[0].strip())
         except:
             pass
-    
-    # Method 3: find { to }
     try:
         match = re.search(r'\{[\s\S]*\}', text)
         if match:
             return json.loads(match.group())
     except:
         pass
-
-    # Method 4: fix common issues
-    try:
-        cleaned = text.strip()
-        cleaned = re.sub(r',\s*}', '}', cleaned)
-        cleaned = re.sub(r',\s*]', ']', cleaned)
-        return json.loads(cleaned)
-    except:
-        pass
-
     return None
 
-async def review_code(code: str, language: str, focus: str) -> dict:
+async def review_code(code: str, language: str, focus: str, context: str) -> dict:
     try:
         result = await chain.ainvoke({
             "language": language,
             "focus": focus,
-            "code": code
+            "code": code,
+            "context": context
         })
-
         parsed = extract_json(result.strip())
-        
         if parsed:
             return parsed
-        
-        # Fallback
         return {
-            "summary": "Review completed but response formatting failed. Please try again.",
+            "summary": "Parsing failed. Please try again.",
             "bugs": [],
             "security_issues": [],
             "performance_issues": [],
-            "suggestions": ["Try clicking Review My Code again"],
+            "suggestions": ["Try again"],
             "improved_code": code,
             "score": 5
         }
-
     except Exception as e:
         return {
             "summary": f"Error: {str(e)}",

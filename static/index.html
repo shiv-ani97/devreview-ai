@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevReview AI — AI Code Reviewer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
+        header { background: #1a1a2e; padding: 1rem 2rem; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 1rem; }
+        header h1 { font-size: 1.5rem; color: #7c6af7; }
+        header span { font-size: 0.85rem; color: #888; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .panel { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; border: 1px solid #2a2a3e; }
+        .panel h2 { font-size: 1rem; color: #7c6af7; margin-bottom: 1rem; }
+        .controls { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        select { background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; flex: 1; }
+        textarea { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; border-radius: 8px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.85rem; resize: vertical; min-height: 300px; }
+        button { width: 100%; background: #7c6af7; color: white; border: none; padding: 0.85rem; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
+        button:hover { background: #6a58e0; }
+        button:disabled { background: #444; cursor: not-allowed; }
+        .score-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .score-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 3px solid #7c6af7; color: #7c6af7; }
+        .section { margin-bottom: 1.2rem; }
+        .section h3 { font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tag { display: inline-block; background: #2a2a3e; padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; margin: 0.2rem; }
+        .tag.bug { border-left: 3px solid #e74c3c; }
+        .tag.security { border-left: 3px solid #f39c12; }
+        .tag.performance { border-left: 3px solid #3498db; }
+        .tag.suggestion { border-left: 3px solid #2ecc71; }
+        .improved-code { background: #0f0f1a; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-x: auto; border: 1px solid #333; max-height: 300px; overflow-y: auto; }
+        .loading { text-align: center; padding: 2rem; color: #7c6af7; }
+        .empty { text-align: center; padding: 3rem; color: #555; }
+        .summary-text { font-size: 0.9rem; line-height: 1.6; color: #ccc; background: #0f0f1a; padding: 1rem; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ DevReview AI</h1>
+        <span>AI-Powered Code Review Tool</span>
+    </header>
+
+    <div class="container">
+        <div class="panel">
+            <h2>📝 Your Code</h2>
+            <div class="controls">
+                <select id="language">
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="java">Java</option>
+                    <option value="sql">SQL</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="go">Go</option>
+                </select>
+                <select id="focus">
+                    <option value="general">General Review</option>
+                    <option value="security">Security Focus</option>
+                    <option value="performance">Performance Focus</option>
+                    <option value="bugs">Bug Detection</option>
+                </select>
+            </div>
+            <textarea id="code" placeholder="Paste your code here..."></textarea>
+            <button id="reviewBtn" onclick="reviewCode()">⚡ Review My Code</button>
+        </div>
+
+        <div class="panel">
+            <h2>🔍 Review Results</h2>
+            <div id="results">
+                <div class="empty">Paste your code and click Review to get started</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function reviewCode() {
+            const code = document.getElementById('code').value.trim();
+            const language = document.getElementById('language').value;
+            const focus = document.getElementById('focus').value;
+            const btn = document.getElementById('reviewBtn');
+            const results = document.getElementById('results');
+
+            if (!code) { alert('Please paste some code first!'); return; }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ Reviewing...';
+            results.innerHTML = '<div class="loading">🤖 AI is reviewing your code...</div>';
+
+            try {
+                const response = await fetch('/review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, language, focus })
+                });
+
+                const data = await response.json();
+
+                results.innerHTML = `
+                    <div class="score-bar">
+                        <div class="score-circle">${data.score}/10</div>
+                        <div>
+                            <div style="font-weight:500">Code Quality Score</div>
+                            <div style="font-size:0.8rem;color:#888">${getScoreLabel(data.score)}</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>📋 Summary</h3>
+                        <div class="summary-text">${data.summary}</div>
+                    </div>
+
+                    ${data.bugs.length ? `<div class="section">
+                        <h3>🐛 Bugs Found (${data.bugs.length})</h3>
+                        ${data.bugs.map(b => `<span class="tag bug">${b}</span>`).join('')}
+                    </div>` : ''}
+
+                    ${data.security_issues.length ? `<div class="section">
+                        <h3>🔒 Security Issues (${data.security_issues.length})</h3>
+                        ${data.security_issues.map(s => `<span class="tag security">${s}</span>`).join('')}
+                    </div>` : ''}
+
+                    ${data.performance_issues.length ? `<div class="section">
+                        <h3>⚡ Performance Issues (${data.performance_issues.length})</h3>
+                        ${data.performance_issues.map(p => `<span class="tag performance">${p}</span>`).join('')}
+                    </div>` : ''}
+
+                    ${data.suggestions.length ? `<div class="section">
+                        <h3>💡 Suggestions (${data.suggestions.length})</h3>
+                        ${data.suggestions.map(s => `<span class="tag suggestion">${s}</span>`).join('')}
+                    </div>` : ''}
+
+                    <div class="section">
+                        <h3>✨ Improved Code</h3>
+                        <div class="improved-code">${escapeHtml(data.improved_code)}</div>
+                    </div>
+                `;
+            } catch (err) {
+                results.innerHTML = `<div class="empty" style="color:#e74c3c">❌ Error: ${err.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '⚡ Review My Code';
+            }
+        }
+
+        function getScoreLabel(score) {
+            if (score >= 9) return 'Excellent code!';
+            if (score >= 7) return 'Good code, minor improvements needed';
+            if (score >= 5) return 'Average, several improvements needed';
+            return 'Needs significant improvement';
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+    </script>
+</body>
+</html>

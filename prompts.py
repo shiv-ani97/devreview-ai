@@ -7,23 +7,28 @@ Analyze ONLY security vulnerabilities. DO NOT report bugs or performance issues.
 Code:
 {code}
 
-Find ONLY: SQL injection, hardcoded secrets, XSS, no input validation, exposed credentials.
+Step 1 - Find ONLY these security issues:
+- SQL injection (string concatenation in queries)
+- Hardcoded secrets/passwords/API keys
+- Missing input validation
+- Exposed credentials
 
-Score between 1-10:
+Step 2 - Score between 1-10:
 - SQL injection: -3 each
-- Hardcoded secret/password/key: -2 each
+- Hardcoded secret: -2 each
 - No input validation: -1
 - Minimum score is 1
 
-For improved_code you MUST:
-- Replace ALL string concatenation queries with parameterized queries using ? placeholders
-- Move ALL hardcoded secrets to os.environ.get()
-- Add input validation for ALL user inputs
-- The improved code must score 9/10 if reviewed again
+Step 3 - Generate improved_code by applying EACH suggestion you found:
+- For EVERY SQL injection found: replace with parameterized query using ? placeholder
+- For EVERY hardcoded secret found: replace with os.environ.get('SECRET_NAME')
+- For EVERY missing input validation: add if not username or not password validation
+- Add import os at top if using env variables
+- The improved_code must directly address ALL security_issues listed
 - Do NOT change performance or error handling code
 
-Return ONLY this JSON where bugs and performance_issues are ALWAYS empty arrays:
-{{"summary":"security only summary","bugs":[],"security_issues":["issue1","issue2"],"performance_issues":[],"suggestions":["fix1","fix2","fix3"],"improved_code":"fully secure code here that would score 9/10","score":2}}"""
+Return ONLY this JSON:
+{{"summary":"2 sentence security summary for {context}","bugs":[],"security_issues":["specific issue 1","specific issue 2"],"performance_issues":[],"suggestions":["specific security fix 1","specific security fix 2","specific security fix 3"],"improved_code":"complete code with ALL security fixes applied based on suggestions","score":2}}"""
 
     elif focus == "performance":
         return f"""You are a performance expert reviewing {language} code for: {context}
@@ -33,25 +38,29 @@ Analyze ONLY performance issues. DO NOT report security or bug issues.
 Code:
 {code}
 
-Find ONLY: N+1 queries, repeated DB connections, inefficient loops, no caching.
+Step 1 - Find ONLY these performance issues:
+- N+1 query problem (query inside loop)
+- New DB connection created on every function call
+- Inefficient loops that could use better algorithms
+- Missing caching for repeated expensive calls
 
-Score between 1-10:
-- N+1 query problem: -2 each
+Step 2 - Score between 1-10:
+- N+1 query: -2 each
 - New DB connection every call: -1.5
 - Inefficient loop: -1 each
 - No caching: -1
 - Minimum score is 1
 
-For improved_code you MUST:
-- Fix N+1 queries by using JOIN to fetch all data in single query
-- Use connection pooling or pass connection as parameter instead of creating new connection every call
-- Replace inefficient loops with optimized queries
-- Add caching using functools.lru_cache or dict for repeated calls
-- The improved code must score 9/10 if reviewed again for performance
+Step 3 - Generate improved_code by applying EACH suggestion:
+- For N+1 query: rewrite using JOIN to fetch all data in ONE query
+- For repeated connections: accept conn as function parameter or use connection pool
+- For inefficient loops: use list comprehension or batch operations
+- For missing cache: add @functools.lru_cache or simple dict cache
+- The improved_code must directly address ALL performance_issues listed
 - Do NOT change security related code
 
-Return ONLY this JSON where bugs and security_issues are ALWAYS empty arrays:
-{{"summary":"performance only summary","bugs":[],"security_issues":[],"performance_issues":["issue1","issue2"],"suggestions":["fix1","fix2","fix3"],"improved_code":"fully optimized code here that would score 9/10","score":3}}"""
+Return ONLY this JSON:
+{{"summary":"2 sentence performance summary for {context}","bugs":[],"security_issues":[],"performance_issues":["specific issue 1","specific issue 2"],"suggestions":["specific performance fix 1","specific performance fix 2","specific performance fix 3"],"improved_code":"complete code with ALL performance fixes applied based on suggestions","score":3}}"""
 
     elif focus == "bugs":
         return f"""You are a bug detection expert reviewing {language} code for: {context}
@@ -61,52 +70,56 @@ Analyze ONLY bugs and logic errors. DO NOT report security or performance issues
 Code:
 {code}
 
-Find ONLY: missing error handling, unclosed connections, None not handled, logic errors, unhandled exceptions.
+Step 1 - Find ONLY these bugs:
+- Missing try/except around database operations
+- Unclosed database connections (no conn.close() or finally block)
+- Missing None/null checks before using variables
+- Logic errors and unhandled edge cases
+- Missing return value handling
 
-Score between 1-10:
+Step 2 - Score between 1-10:
 - No try/except: -2
 - Unclosed connection: -1.5 each
 - Missing null check: -1 each
 - Logic error: -2 each
 - Minimum score is 1
 
-For improved_code you MUST:
-- Wrap ALL database operations in try/except/finally blocks
-- Close ALL connections in finally block to prevent leaks
-- Add None/null checks before using any variable
-- Handle ALL edge cases and exceptions properly
-- Return meaningful error messages instead of None
-- The improved code must score 9/10 if reviewed again for bugs
+Step 3 - Generate improved_code by applying EACH suggestion:
+- For missing try/except: wrap ALL DB operations in try/except/finally
+- For unclosed connections: add conn.close() in finally block
+- For missing None checks: add if user is None or if result is None checks
+- For logic errors: fix the specific logic issue found
+- For missing edge cases: add proper handling
+- The improved_code must directly fix ALL bugs listed
 - Do NOT change security related code
 
-Return ONLY this JSON where security_issues and performance_issues are ALWAYS empty arrays:
-{{"summary":"bugs only summary","bugs":["bug1","bug2"],"security_issues":[],"performance_issues":[],"suggestions":["fix1","fix2","fix3"],"improved_code":"fully bug-free code here that would score 9/10","score":4}}"""
+Return ONLY this JSON:
+{{"summary":"2 sentence bug summary for {context}","bugs":["specific bug 1","specific bug 2"],"security_issues":[],"performance_issues":[],"suggestions":["specific bug fix 1","specific bug fix 2","specific bug fix 3"],"improved_code":"complete code with ALL bug fixes applied based on suggestions","score":4}}"""
 
     else:
         return f"""You are a senior {language} engineer reviewing code for: {context}
 
-Do a COMPLETE review covering ALL areas.
-
 Code:
 {code}
 
-Find ALL issues - bugs, security vulnerabilities, performance problems.
+Step 1 - Find ALL issues:
+- Bugs: missing try/except, unclosed connections, null checks
+- Security: SQL injection, hardcoded secrets, no input validation
+- Performance: N+1 queries, repeated connections, no caching
 
-Score between 1-10:
-- Critical security issue: -2 each
+Step 2 - Score between 1-10:
+- Critical security: -2 each
 - Bug: -1.5 each
-- Performance issue: -1 each
-- Minimum score is 1
+- Performance: -1 each
+- Minimum score 1
 
-For improved_code you MUST fix ALL of these:
-1. Replace string concatenation queries with parameterized queries
-2. Move hardcoded secrets to os.environ.get()
-3. Add try/except/finally blocks around all DB operations
-4. Close connections in finally blocks
-5. Fix N+1 queries using JOIN
-6. Add input validation
-7. Add proper error handling and return meaningful responses
-8. The improved code must score 9/10 if reviewed again
+Step 3 - Generate improved_code that fixes EVERYTHING found:
+- Fix ALL SQL injections with parameterized queries
+- Move ALL secrets to os.environ.get()
+- Add try/except/finally around ALL DB operations
+- Fix N+1 queries with JOIN
+- Add input validation
+- The improved code must score 9/10 if reviewed again
 
-Return ONLY this JSON with ALL sections filled:
-{{"summary":"complete summary","bugs":["bug1","bug2"],"security_issues":["sec1","sec2"],"performance_issues":["perf1","perf2"],"suggestions":["fix1","fix2","fix3"],"improved_code":"completely production-ready code fixing ALL issues","score":3}}"""
+Reply with ONLY JSON no other text:
+{{"summary":"summary","bugs":["bug1"],"security_issues":["sec1"],"performance_issues":["perf1"],"suggestions":["fix1","fix2","fix3"],"improved_code":"production ready code fixing ALL issues","score":3}}"""

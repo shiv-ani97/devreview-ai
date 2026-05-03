@@ -45,7 +45,7 @@ async def call_llm(prompt: str, system: str) -> str:
 
 async def review_code(code: str, language: str, focus: str, context: str) -> dict:
     try:
-        # Call 1: Find issues and suggestions
+        # Call 1: Find issues
         review_prompt = get_review_prompt(language, focus, code, context)
         review_result = await call_llm(
             review_prompt,
@@ -60,15 +60,14 @@ async def review_code(code: str, language: str, focus: str, context: str) -> dic
                 "suggestions": ["Try again"], "improved_code": code, "score": 5
             }
 
-        # Extract suggestions and issues from first call
-        suggestions = parsed.get("suggestions", [])
         bugs = parsed.get("bugs", [])
         security_issues = parsed.get("security_issues", [])
         performance_issues = parsed.get("performance_issues", [])
+        suggestions = parsed.get("suggestions", [])
         score = parsed.get("score", 5)
         summary = parsed.get("summary", "")
 
-        # Call 2: Generate optimal code based on exact issues found
+        # Call 2: Generate optimal code based on exact issues
         fix_prompt = get_fix_prompt(
             language=language,
             focus=focus,
@@ -81,7 +80,7 @@ async def review_code(code: str, language: str, focus: str, context: str) -> dic
         )
         fixed_code = await call_llm(
             fix_prompt,
-            "You are an expert code optimizer. Return ONLY the fixed code, no explanations, no markdown, no backticks."
+            "You are an expert code optimizer. Return ONLY the fixed code. No explanations, no markdown, no backticks."
         )
 
         # Clean code response

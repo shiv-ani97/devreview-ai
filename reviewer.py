@@ -6,39 +6,63 @@ from groq import AsyncGroq
 from prompts import get_prompt
 
 load_dotenv()
-
 client = AsyncGroq(api_key=os.environ.get("GROQ_API_KEY"))
+
+def extract_json(text: str):
+    try:
+        return json.loads(text)
+    except:
+        pass
+    if "```json" in text:
+        try:
+            return json.loads(text.split("```json")[1].split("```")[0].strip())
+        except:
+            pass
+    if "```" in text:
+        try:
+            return json.loads(text.split("```")[1].split("```")[0].strip())
+        except:
+            pass
+    try:
+        match = re.search(r'\{[\s\S]*\}', text)
+        if match:
+            return json.loads(match.group())
+    except:
+        pass
+    return None
 
 async def review_code(code: str, language: str, focus: str, context: str) -> dict:
     try:
         prompt = get_prompt(language, focus, code, context)
-        
         response = await client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are a strict code reviewer. Always respond with valid JSON only."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
+                {"role": "system", "content": "You are a strict code reviewer. Respond with ONLY valid JSON. No text before or after."},
+                {"role": "user", "content": prompt}
             ],
-            response_format={"type": "json_object"},
-            temperature=0.0
+            temperature=0.0,
+            max_tokens=2000
         )
-        
-        result = response.choices[0].message.content
-        return json.loads(result)
-
+        result = response.choices[0].message.content.strip()
+        parsed = extract_json(result)
+        if parsed:
+            return {
+                "summary": parsed.get("summary", "Review complete"),
+                "bugs": parsed.get("bugs", []),
+                "security_issues": parsed.get("security_issues", []),
+                "performance_issues": parsed.get("performance_issues", []),
+                "suggestions": parsed.get("suggestions", []),
+                "improved_code": parsed.get("improved_code", code),
+                "score": parsed.get("score", 5)
+            }
+        return {
+            "summary": "Could not parse response. Please try again.",
+            "bugs": [], "security_issues": [], "performance_issues": [],
+            "suggestions": ["Try again"], "improved_code": code, "score": 5
+        }
     except Exception as e:
         return {
             "summary": f"Error: {str(e)}",
-            "bugs": [],
-            "security_issues": [],
-            "performance_issues": [],
-            "suggestions": ["Try again"],
-            "improved_code": code,
-            "score": 5
+            "bugs": [], "security_issues": [], "performance_issues": [],
+            "suggestions": ["Try again"], "improved_code": code, "score": 5
         }

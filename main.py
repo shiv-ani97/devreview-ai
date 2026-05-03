@@ -5,12 +5,7 @@ from fastapi.responses import FileResponse
 from schemas import CodeReviewRequest, CodeReviewResponse
 from reviewer import review_code
 
-app = FastAPI(
-    title="DevReview AI",
-    description="AI-Powered Code Review Tool",
-    version="1.0.0"
-)
-
+app = FastAPI(title="DevReview AI", description="AI-Powered Code Review Tool", version="1.0.0")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")

@@ -112,51 +112,59 @@
                 });
 
                 const data = await response.json();
-                const scoreClass = data.score <= 4 ? 'low' : data.score <= 6 ? 'mid' : 'high';
-                const prompt = generatePrompt(data, code, context, language, focus);
+
+                // Safe parsing with fallbacks
+                const score = parseInt(data.score) || 5;
+                const summary = data.summary || "Review complete";
+                const bugs = Array.isArray(data.bugs) ? data.bugs : [];
+                const security = Array.isArray(data.security_issues) ? data.security_issues : [];
+                const performance = Array.isArray(data.performance_issues) ? data.performance_issues : [];
+                const suggestions = Array.isArray(data.suggestions) ? data.suggestions : [];
+                const scoreClass = score <= 4 ? 'low' : score <= 6 ? 'mid' : 'high';
+                const prompt = generatePrompt(data, code, context, language, focus, score);
 
                 results.innerHTML = `
                     <div class="score-bar">
-                        <div class="score-circle ${scoreClass}">${data.score}/10</div>
+                        <div class="score-circle ${scoreClass}">${score}/10</div>
                         <div>
-                            <div style="font-weight:500;font-size:15px">${getScoreLabel(data.score)}</div>
+                            <div style="font-weight:500;font-size:15px">${getScoreLabel(score)}</div>
                             <div style="font-size:0.8rem;color:#888;margin-top:3px">Focus: ${getFocusLabel(focus)}</div>
                         </div>
                     </div>
 
                     <div class="section">
                         <h3>📋 Summary</h3>
-                        <div class="summary-text">${data.summary}</div>
+                        <div class="summary-text">${summary}</div>
                     </div>
 
-                    ${data.bugs && data.bugs.length ? `
+                    ${bugs.length ? `
                     <div class="section">
-                        <h3>🐛 Bugs Found (${data.bugs.length})</h3>
-                        ${data.bugs.map(b => `<span class="tag bug">${b}</span>`).join('')}
+                        <h3>🐛 Bugs Found (${bugs.length})</h3>
+                        ${bugs.map(b => `<span class="tag bug">${b}</span>`).join('')}
                     </div>` : focus === 'bugs' || focus === 'general' ? `
                     <div class="section"><h3>🐛 Bugs</h3>
                     <p class="no-issues">✅ No bugs found</p></div>` : ''}
 
-                    ${data.security_issues && data.security_issues.length ? `
+                    ${security.length ? `
                     <div class="section">
-                        <h3>🔒 Security Issues (${data.security_issues.length})</h3>
-                        ${data.security_issues.map(s => `<span class="tag security">${s}</span>`).join('')}
+                        <h3>🔒 Security Issues (${security.length})</h3>
+                        ${security.map(s => `<span class="tag security">${s}</span>`).join('')}
                     </div>` : focus === 'security' || focus === 'general' ? `
                     <div class="section"><h3>🔒 Security</h3>
                     <p class="no-issues">✅ No security issues found</p></div>` : ''}
 
-                    ${data.performance_issues && data.performance_issues.length ? `
+                    ${performance.length ? `
                     <div class="section">
-                        <h3>⚡ Performance Issues (${data.performance_issues.length})</h3>
-                        ${data.performance_issues.map(p => `<span class="tag performance">${p}</span>`).join('')}
+                        <h3>⚡ Performance Issues (${performance.length})</h3>
+                        ${performance.map(p => `<span class="tag performance">${p}</span>`).join('')}
                     </div>` : focus === 'performance' || focus === 'general' ? `
                     <div class="section"><h3>⚡ Performance</h3>
                     <p class="no-issues">✅ No performance issues found</p></div>` : ''}
 
-                    ${data.suggestions && data.suggestions.length ? `
+                    ${suggestions.length ? `
                     <div class="section">
-                        <h3>💡 Suggestions (${data.suggestions.length})</h3>
-                        ${data.suggestions.map(s => `<span class="tag suggestion">${s}</span>`).join('')}
+                        <h3>💡 Suggestions (${suggestions.length})</h3>
+                        ${suggestions.map(s => `<span class="tag suggestion">${s}</span>`).join('')}
                     </div>` : ''}
 
                     <div class="prompt-section">
@@ -179,17 +187,17 @@
             }
         }
 
-        function generatePrompt(data, code, context, language, focus) {
-            const bugs = data.bugs && data.bugs.length ? data.bugs.map(b => `- ${b}`).join('\n') : '- None';
-            const security = data.security_issues && data.security_issues.length ? data.security_issues.map(s => `- ${s}`).join('\n') : '- None';
-            const performance = data.performance_issues && data.performance_issues.length ? data.performance_issues.map(p => `- ${p}`).join('\n') : '- None';
-            const suggestions = data.suggestions && data.suggestions.length ? data.suggestions.map(s => `- ${s}`).join('\n') : '- None';
+        function generatePrompt(data, code, context, language, focus, score) {
+            const bugs = Array.isArray(data.bugs) && data.bugs.length ? data.bugs.map(b => `- ${b}`).join('\n') : '- None';
+            const security = Array.isArray(data.security_issues) && data.security_issues.length ? data.security_issues.map(s => `- ${s}`).join('\n') : '- None';
+            const performance = Array.isArray(data.performance_issues) && data.performance_issues.length ? data.performance_issues.map(p => `- ${p}`).join('\n') : '- None';
+            const suggestions = Array.isArray(data.suggestions) && data.suggestions.length ? data.suggestions.map(s => `- ${s}`).join('\n') : '- None';
 
             return `You are a Senior ${language} Backend Architect and Security Expert.
 
 CONTEXT: ${context}
 REVIEW FOCUS: ${focus}
-CURRENT CODE QUALITY SCORE: ${data.score}/10
+CURRENT CODE QUALITY SCORE: ${score}/10
 
 ISSUES FOUND IN MY CODE:
 
@@ -234,6 +242,7 @@ Provide complete production-ready code with inline comments explaining each impr
         }
 
         function escapeHtml(text) {
+            if (!text) return '';
             return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 

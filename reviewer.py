@@ -48,13 +48,13 @@ async def review_code(code: str, language: str, focus: str, context: str) -> dic
 
         if parsed:
             return {
-                "summary": parsed.get("summary", "Review complete"),
-                "bugs": parsed.get("bugs", []),
-                "security_issues": parsed.get("security_issues", []),
-                "performance_issues": parsed.get("performance_issues", []),
-                "suggestions": parsed.get("suggestions", []),
+                "summary": str(parsed.get("summary") or "Review complete"),
+                "bugs": parsed.get("bugs") or [],
+                "security_issues": parsed.get("security_issues") or [],
+                "performance_issues": parsed.get("performance_issues") or [],
+                "suggestions": parsed.get("suggestions") or [],
                 "improved_code": "",
-                "score": parsed.get("score", 5)
+                "score": max(1, min(10, int(parsed.get("score") or 5)))
             }
 
         return {

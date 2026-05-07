@@ -13,15 +13,14 @@
         .container { max-width: 1300px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .panel { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; border: 1px solid #2a2a3e; }
         .panel h2 { font-size: 1rem; color: #7c6af7; margin-bottom: 1rem; }
-        .controls { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-        select, input[type="text"] { background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; }
-        select { flex: 1; }
+        .controls { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; }
+        select { background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; flex: 1; }
         .context-bar { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #444; border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.9rem; margin-bottom: 0.75rem; }
         .context-bar::placeholder { color: #555; }
-        textarea { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; border-radius: 8px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.85rem; resize: vertical; min-height: 280px; }
-        button { width: 100%; background: #7c6af7; color: white; border: none; padding: 0.85rem; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 0.75rem; transition: background 0.2s; }
-        button:hover { background: #6a58e0; }
-        button:disabled { background: #444; cursor: not-allowed; }
+        textarea { width: 100%; background: #0f0f1a; color: #e0e0e0; border: 1px solid #333; border-radius: 8px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.85rem; resize: vertical; min-height: 300px; }
+        .btn-review { width: 100%; background: #7c6af7; color: white; border: none; padding: 0.85rem; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 0.75rem; transition: background 0.2s; }
+        .btn-review:hover { background: #6a58e0; }
+        .btn-review:disabled { background: #444; cursor: not-allowed; }
         .score-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: #0f0f1a; border-radius: 8px; }
         .score-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: bold; border: 3px solid #7c6af7; color: #7c6af7; flex-shrink: 0; }
         .score-circle.low { border-color: #e74c3c; color: #e74c3c; }
@@ -34,13 +33,23 @@
         .tag.security { border-left: 3px solid #f39c12; }
         .tag.performance { border-left: 3px solid #3498db; }
         .tag.suggestion { border-left: 3px solid #2ecc71; }
-        .improved-code { background: #0f0f1a; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-x: auto; border: 1px solid #333; max-height: 300px; overflow-y: auto; }
         .loading { text-align: center; padding: 2rem; color: #7c6af7; }
         .empty { text-align: center; padding: 3rem; color: #555; font-size: 0.9rem; }
         .summary-text { font-size: 0.9rem; line-height: 1.6; color: #ccc; background: #0f0f1a; padding: 1rem; border-radius: 8px; }
-        .copy-btn { background: #2a2a3e; color: #aaa; border: 1px solid #444; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; float: right; margin-bottom: 0.5rem; }
-        .copy-btn:hover { background: #333; color: #fff; }
         .no-issues { color: #2ecc71; font-size: 0.85rem; padding: 0.5rem 0; }
+        .prompt-section { margin-top: 1.5rem; border-top: 1px solid #2a2a3e; padding-top: 1.5rem; }
+        .prompt-section h3 { font-size: 0.9rem; color: #7c6af7; margin-bottom: 0.5rem; }
+        .prompt-label { font-size: 0.75rem; color: #888; margin-bottom: 0.75rem; }
+        .prompt-box { background: #0f0f1a; border: 1px solid #333; border-radius: 8px; padding: 1rem; font-size: 0.78rem; color: #ccc; white-space: pre-wrap; max-height: 220px; overflow-y: auto; line-height: 1.5; font-family: 'Courier New', monospace; }
+        .prompt-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+        .btn-copy { background: #2a2a3e; color: #e0e0e0; border: 1px solid #444; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
+        .btn-copy:hover { background: #333; }
+        .btn-claude { background: #cc785c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-claude:hover { background: #b5694e; }
+        .btn-chatgpt { background: #10a37f; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-chatgpt:hover { background: #0d8a6c; }
+        .btn-gemini { background: #4285f4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-gemini:hover { background: #3270d4; }
     </style>
 </head>
 <body>
@@ -48,7 +57,6 @@
         <h1>⚡ DevReview AI</h1>
         <span>AI-Powered Code Review Tool</span>
     </header>
-
     <div class="container">
         <div class="panel">
             <h2>📝 Your Code</h2>
@@ -68,20 +76,15 @@
                     <option value="bugs">Bug Detection</option>
                 </select>
             </div>
-            <input 
-                type="text" 
-                id="context" 
-                class="context-bar"
-                placeholder="Describe your code: e.g. 'Login API for banking app' or 'Data processing script for 1M records'"
-            />
+            <input type="text" id="context" class="context-bar"
+                placeholder="Describe your code: e.g. 'Login API for banking app'"/>
             <textarea id="code" placeholder="Paste your code here..."></textarea>
-            <button id="reviewBtn" onclick="reviewCode()">⚡ Review My Code</button>
+            <button class="btn-review" id="reviewBtn" onclick="reviewCode()">⚡ Review My Code</button>
         </div>
-
         <div class="panel">
             <h2>🔍 Review Results</h2>
             <div id="results">
-                <div class="empty">Describe your code, paste it and click Review to get a focused AI review</div>
+                <div class="empty">Paste your code and click Review to get started</div>
             </div>
         </div>
     </div>
@@ -91,7 +94,7 @@
             const code = document.getElementById('code').value.trim();
             const language = document.getElementById('language').value;
             const focus = document.getElementById('focus').value;
-            const context = document.getElementById('context').value.trim() || "No context provided";
+            const context = document.getElementById('context').value.trim() || "General application";
             const btn = document.getElementById('reviewBtn');
             const results = document.getElementById('results');
 
@@ -99,7 +102,7 @@
 
             btn.disabled = true;
             btn.textContent = '⏳ Reviewing...';
-            results.innerHTML = '<div class="loading">🤖 AI is reviewing your code...</div>';
+            results.innerHTML = '<div class="loading">🤖 Analyzing your code...</div>';
 
             try {
                 const response = await fetch('/review', {
@@ -110,6 +113,7 @@
 
                 const data = await response.json();
                 const scoreClass = data.score <= 4 ? 'low' : data.score <= 6 ? 'mid' : 'high';
+                const prompt = generatePrompt(data, code, context, language, focus);
 
                 results.innerHTML = `
                     <div class="score-bar">
@@ -125,32 +129,48 @@
                         <div class="summary-text">${data.summary}</div>
                     </div>
 
-                    ${data.bugs && data.bugs.length ? `<div class="section">
+                    ${data.bugs && data.bugs.length ? `
+                    <div class="section">
                         <h3>🐛 Bugs Found (${data.bugs.length})</h3>
                         ${data.bugs.map(b => `<span class="tag bug">${b}</span>`).join('')}
-                    </div>` : focus === 'bugs' || focus === 'general' ? `<div class="section"><h3>🐛 Bugs</h3><p class="no-issues">✅ No bugs found</p></div>` : ''}
+                    </div>` : focus === 'bugs' || focus === 'general' ? `
+                    <div class="section"><h3>🐛 Bugs</h3>
+                    <p class="no-issues">✅ No bugs found</p></div>` : ''}
 
-                    ${data.security_issues && data.security_issues.length ? `<div class="section">
+                    ${data.security_issues && data.security_issues.length ? `
+                    <div class="section">
                         <h3>🔒 Security Issues (${data.security_issues.length})</h3>
                         ${data.security_issues.map(s => `<span class="tag security">${s}</span>`).join('')}
-                    </div>` : focus === 'security' || focus === 'general' ? `<div class="section"><h3>🔒 Security</h3><p class="no-issues">✅ No security issues found</p></div>` : ''}
+                    </div>` : focus === 'security' || focus === 'general' ? `
+                    <div class="section"><h3>🔒 Security</h3>
+                    <p class="no-issues">✅ No security issues found</p></div>` : ''}
 
-                    ${data.performance_issues && data.performance_issues.length ? `<div class="section">
+                    ${data.performance_issues && data.performance_issues.length ? `
+                    <div class="section">
                         <h3>⚡ Performance Issues (${data.performance_issues.length})</h3>
                         ${data.performance_issues.map(p => `<span class="tag performance">${p}</span>`).join('')}
-                    </div>` : focus === 'performance' || focus === 'general' ? `<div class="section"><h3>⚡ Performance</h3><p class="no-issues">✅ No performance issues found</p></div>` : ''}
+                    </div>` : focus === 'performance' || focus === 'general' ? `
+                    <div class="section"><h3>⚡ Performance</h3>
+                    <p class="no-issues">✅ No performance issues found</p></div>` : ''}
 
-                    ${data.suggestions && data.suggestions.length ? `<div class="section">
+                    ${data.suggestions && data.suggestions.length ? `
+                    <div class="section">
                         <h3>💡 Suggestions (${data.suggestions.length})</h3>
                         ${data.suggestions.map(s => `<span class="tag suggestion">${s}</span>`).join('')}
                     </div>` : ''}
 
-                    <div class="section">
-                        <h3>✨ Optimized Code</h3>
-                        <button class="copy-btn" onclick="copyCode()">Copy</button>
-                        <div class="improved-code" id="improvedCode">${escapeHtml(data.improved_code)}</div>
-                    </div>
-                `;
+                    <div class="prompt-section">
+                        <h3>🚀 Get Optimal Solution</h3>
+                        <p class="prompt-label">Copy this prompt → paste into Claude, ChatGPT or Gemini → get production-ready code:</p>
+                        <div class="prompt-box" id="promptBox">${escapeHtml(prompt)}</div>
+                        <div class="prompt-actions">
+                            <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
+                            <a class="btn-claude" href="https://claude.ai" target="_blank">Open Claude ↗</a>
+                            <a class="btn-chatgpt" href="https://chatgpt.com" target="_blank">Open ChatGPT ↗</a>
+                            <a class="btn-gemini" href="https://gemini.google.com" target="_blank">Open Gemini ↗</a>
+                        </div>
+                    </div>`;
+
             } catch (err) {
                 results.innerHTML = `<div class="empty" style="color:#e74c3c">❌ Error: ${err.message}</div>`;
             } finally {
@@ -159,11 +179,62 @@
             }
         }
 
-        function copyCode() {
-            const code = document.getElementById('improvedCode').innerText;
-            navigator.clipboard.writeText(code);
-            document.querySelector('.copy-btn').textContent = 'Copied!';
-            setTimeout(() => document.querySelector('.copy-btn').textContent = 'Copy', 2000);
+        function generatePrompt(data, code, context, language, focus) {
+            const bugs = data.bugs && data.bugs.length ? data.bugs.map(b => `- ${b}`).join('\n') : '- None';
+            const security = data.security_issues && data.security_issues.length ? data.security_issues.map(s => `- ${s}`).join('\n') : '- None';
+            const performance = data.performance_issues && data.performance_issues.length ? data.performance_issues.map(p => `- ${p}`).join('\n') : '- None';
+            const suggestions = data.suggestions && data.suggestions.length ? data.suggestions.map(s => `- ${s}`).join('\n') : '- None';
+
+            return `You are a Senior ${language} Backend Architect and Security Expert.
+
+CONTEXT: ${context}
+REVIEW FOCUS: ${focus}
+CURRENT CODE QUALITY SCORE: ${data.score}/10
+
+ISSUES FOUND IN MY CODE:
+
+BUGS:
+${bugs}
+
+SECURITY ISSUES:
+${security}
+
+PERFORMANCE ISSUES:
+${performance}
+
+SUGGESTIONS FROM REVIEW:
+${suggestions}
+
+MY CODE:
+\`\`\`${language}
+${code}
+\`\`\`
+
+YOUR TASK:
+Rewrite my code as a production-ready ${language} solution that:
+1. Fixes EVERY bug listed above with a comment explaining the fix
+2. Resolves ALL security issues using parameterized queries, environment variables, proper input validation
+3. Addresses ALL performance issues using connection pooling, efficient queries, caching where needed
+4. Implements ALL suggestions listed above
+5. Never returns password hashes or raw exception strings to the client
+6. Uses proper logging instead of print statements
+7. Adds type hints to all functions
+8. Includes docstrings explaining what each function does
+9. The fixed code should score 9/10 when reviewed again
+
+Provide complete production-ready code with inline comments explaining each improvement.`;
+        }
+
+        function copyPrompt() {
+            const prompt = document.getElementById('promptBox').innerText;
+            navigator.clipboard.writeText(prompt);
+            const btn = document.querySelector('.btn-copy');
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => btn.textContent = '📋 Copy Prompt', 2000);
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 
         function getScoreLabel(score) {
@@ -176,11 +247,6 @@
         function getFocusLabel(focus) {
             const labels = { general: 'General Review', security: 'Security', performance: 'Performance', bugs: 'Bug Detection' };
             return labels[focus] || focus;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
     </script>
 </body>
